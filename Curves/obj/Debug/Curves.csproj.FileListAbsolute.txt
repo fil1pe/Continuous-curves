@@ -1,0 +1,10 @@
+C:\Users\Lipe\Documents\Curves\Curves\bin\Debug\Curves.exe.config
+C:\Users\Lipe\Documents\Curves\Curves\bin\Debug\Curves.exe
+C:\Users\Lipe\Documents\Curves\Curves\bin\Debug\Curves.pdb
+C:\Users\Lipe\Documents\Curves\Curves\obj\Debug\Curves.csprojAssemblyReference.cache
+C:\Users\Lipe\Documents\Curves\Curves\obj\Debug\Curves.Properties.Resources.resources
+C:\Users\Lipe\Documents\Curves\Curves\obj\Debug\Curves.csproj.GenerateResource.cache
+C:\Users\Lipe\Documents\Curves\Curves\obj\Debug\Curves.csproj.CoreCompileInputs.cache
+C:\Users\Lipe\Documents\Curves\Curves\obj\Debug\Curves.exe
+C:\Users\Lipe\Documents\Curves\Curves\obj\Debug\Curves.pdb
+C:\Users\Lipe\Documents\Curves\Curves\obj\Debug\Curves.Window.resources
