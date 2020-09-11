@@ -63,15 +63,15 @@
             this.button1.Text = "C0";
             this.button1.UseVisualStyleBackColor = true;
             // 
-            // Form1
+            // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.panel1);
             this.DoubleBuffered = true;
-            this.Name = "Form1";
-            this.Text = "";
+            this.Name = "Window";
+            this.ShowIcon = false;
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
