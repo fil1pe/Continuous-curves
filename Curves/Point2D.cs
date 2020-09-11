@@ -15,7 +15,7 @@ namespace Curves
         private Brush DrawBrush;
         private bool Dragging = false;
 
-        public Point2D(float x, float y, Color color, Control control)
+        public Point2D(float x, float y, Color color, DrawPanel control)
         {
             _position = new PointF(x, y);
             DrawBrush = new SolidBrush(color);
@@ -23,9 +23,10 @@ namespace Curves
             control.MouseDown += delegate (object sender, MouseEventArgs e)
             {
                 if (e.Location.X >= Position.X - 6 && e.Location.X <= Position.X + 6 &&
-                    e.Location.Y >= Position.Y - 6 && e.Location.Y <= Position.Y + 6)
+                    e.Location.Y >= Position.Y - 6 && e.Location.Y <= Position.Y + 6 &&
+                    control.Dragging == false)
                 {
-                    Dragging = true;
+                    Dragging = control.Dragging = true;
                 }
             };
 
@@ -40,7 +41,7 @@ namespace Curves
 
             control.MouseUp += delegate (object sender, MouseEventArgs e)
             {
-                Dragging = false;
+                Dragging = control.Dragging = false;
             };
         }
 

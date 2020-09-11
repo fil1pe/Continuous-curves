@@ -15,43 +15,53 @@ using System.Windows.Forms;
 
 namespace Curves
 {
+    public class DrawPanel : Panel
+    {
+        public bool Dragging = false;
+
+        public DrawPanel()
+        {
+            DoubleBuffered = true;
+        }
+    }
+
     public partial class Window : Form
     {
-        class DrawPanel : Panel
-        {
-            public DrawPanel()
-            {
-                DoubleBuffered = true;
-            }
-        }
-
         private static float ParseFloat(string str)
         {
             return float.Parse(str, CultureInfo.InvariantCulture);
         }
 
-        private List<Point2D> BezierControlPoints = new List<Point2D>();
+        private List<Point2D> ControlPoints = new List<Point2D>();
         private Bezier BezierCurve;
+        private BSpline BSplineCurve;
 
         public Window()
         {
             InitializeComponent();
-            Color color = Color.BlueViolet;
+            Color color = Color.Coral;
             List<string> pointsStr = File.ReadAllLines(@"points").ToList();
-            for (int i=0; i<5; i++)
+            for (int i=0; i<10; i++)
             {
+                if (i == 5)
+                    color = Color.BlueViolet;
                 string[] coordinates = pointsStr[i].Split(',');
-                BezierControlPoints.Add(
+                ControlPoints.Add(
                     new Point2D(ParseFloat(coordinates[0]), ParseFloat(coordinates[1]), color, panel1)
                 );
             }
-            color = Color.Blue;
-            BezierCurve = new Bezier(BezierControlPoints[0],
-                BezierControlPoints[1],
-                BezierControlPoints[2],
-                BezierControlPoints[3],
-                BezierControlPoints[4],
-                color);
+            BSplineCurve = new BSpline(ControlPoints[0],
+                ControlPoints[1],
+                ControlPoints[2],
+                ControlPoints[3],
+                ControlPoints[4],
+                Color.OrangeRed);
+            BezierCurve = new Bezier(ControlPoints[5],
+                ControlPoints[6],
+                ControlPoints[7],
+                ControlPoints[8],
+                ControlPoints[9],
+                Color.Blue);
             panel1.Paint += new PaintEventHandler(panel1_Paint);
         }
 
@@ -59,28 +69,34 @@ namespace Curves
         {
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
+            // Curves:
+            BezierCurve.Draw(e.Graphics);
+            BSplineCurve.Draw(e.Graphics);
+
+            // Polygons:
             Pen polygonPen = new Pen(Color.FromArgb(150, 150, 150, 150));
             polygonPen.DashStyle = DashStyle.Dash;
 
-            // Curves:
-            BezierCurve.Draw(e.Graphics);
-
-            // Points:
-            for (int i=0; i<BezierControlPoints.Count-1; i++)
+            for (int i=0; i<4; i++)
             {
-                Point2D p1 = BezierControlPoints[i], p2 = BezierControlPoints[i+1];
+                Point2D p1 = ControlPoints[i], p2 = ControlPoints[i+1];
                 e.Graphics.DrawLine(polygonPen, p1.Position, p2.Position);
             }
-            foreach (Point2D p in BezierControlPoints)
+            for (int i=5; i<9; i++)
             {
-                p.Draw(e.Graphics);
+                Point2D p1 = ControlPoints[i], p2 = ControlPoints[i + 1];
+                e.Graphics.DrawLine(polygonPen, p1.Position, p2.Position);
             }
+
+            // Points:
+            for (int i=9; i>=0; i--)
+                ControlPoints[i].Draw(e.Graphics);
         }
 
         private void Window_FormClosing(object sender, FormClosingEventArgs e)
         {
             List<string> points = new List<string>();
-            foreach (Point2D p in BezierControlPoints)
+            foreach (Point2D p in ControlPoints)
             {
                 points.Add(p.Position.X + "," + p.Position.Y);
             }
