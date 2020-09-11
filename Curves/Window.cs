@@ -5,6 +5,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Channels;
 using System.Text;
@@ -23,6 +25,11 @@ namespace Curves
             }
         }
 
+        private static float ParseFloat(string str)
+        {
+            return float.Parse(str, CultureInfo.InvariantCulture);
+        }
+
         private List<Point2D> BezierControlPoints = new List<Point2D>();
         private Bezier BezierCurve;
 
@@ -30,11 +37,14 @@ namespace Curves
         {
             InitializeComponent();
             Color color = Color.BlueViolet;
-            BezierControlPoints.Add(new Point2D(30, 30, color, panel1));
-            BezierControlPoints.Add(new Point2D(70, 70, color, panel1));
-            BezierControlPoints.Add(new Point2D(80, 80, color, panel1));
-            BezierControlPoints.Add(new Point2D(100, 70, color, panel1));
-            BezierControlPoints.Add(new Point2D(100, 90, color, panel1));
+            List<string> pointsStr = File.ReadAllLines(@"points").ToList();
+            for (int i=0; i<5; i++)
+            {
+                string[] coordinates = pointsStr[i].Split(',');
+                BezierControlPoints.Add(
+                    new Point2D(ParseFloat(coordinates[0]), ParseFloat(coordinates[1]), color, panel1)
+                );
+            }
             color = Color.Blue;
             BezierCurve = new Bezier(BezierControlPoints[0],
                 BezierControlPoints[1],
@@ -61,10 +71,20 @@ namespace Curves
                 Point2D p1 = BezierControlPoints[i], p2 = BezierControlPoints[i+1];
                 e.Graphics.DrawLine(polygonPen, p1.Position, p2.Position);
             }
-            foreach(Point2D p in BezierControlPoints)
+            foreach (Point2D p in BezierControlPoints)
             {
                 p.Draw(e.Graphics);
             }
+        }
+
+        private void Window_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            List<string> points = new List<string>();
+            foreach (Point2D p in BezierControlPoints)
+            {
+                points.Add(p.Position.X + "," + p.Position.Y);
+            }
+            File.WriteAllLines(@"points", points);
         }
     }
 }
