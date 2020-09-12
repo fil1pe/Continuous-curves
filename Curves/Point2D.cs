@@ -20,7 +20,7 @@ namespace Curves
             Position = new PointF(x, y);
             DrawBrush = new SolidBrush(color);
 
-            control.MouseDown += delegate (object sender, MouseEventArgs e)
+            control.MouseDown += (sender, e) =>
             {
                 if (e.Location.X >= Position.X - 6 && e.Location.X <= Position.X + 6 &&
                     e.Location.Y >= Position.Y - 6 && e.Location.Y <= Position.Y + 6 &&
@@ -30,7 +30,7 @@ namespace Curves
                 }
             };
 
-            control.MouseMove += delegate (object sender, MouseEventArgs e)
+            control.MouseMove += (sender, e) =>
             {
                 if (Dragging)
                 {
@@ -39,7 +39,7 @@ namespace Curves
                 }
             };
 
-            control.MouseUp += delegate (object sender, MouseEventArgs e)
+            control.MouseUp += (sender, e) =>
             {
                 Dragging = control.Dragging = false;
             };
