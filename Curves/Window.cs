@@ -76,6 +76,7 @@ namespace Curves
             panel1.Paint += new PaintEventHandler(panel1_Paint);
             button1.Click += C0;
             button2.Click += G1;
+            button3.Click += C1;
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
@@ -155,6 +156,29 @@ namespace Curves
 
             BezierCurve.Rotate(-angle, p1.Position);
             BSplineCurve.Rotate(-angle, p1.Position);
+
+            panel1.Invalidate();
+        }
+
+        private void C1(object sender, EventArgs e)
+        {
+            G1(sender, e);
+
+            Point2D p0 = BSplineControlPoints[BSplineControlPoints.Count - 2];
+            Point2D p1 = BezierControlPoints.First();
+            Point2D p2 = BezierControlPoints[1];
+
+            float x1 = p1.Position.X,
+                y1 = p1.Position.Y;
+
+            float scaleX = (x1 - p0.Position.X) / (p2.Position.X - x1),
+                scaleY = (y1 - p0.Position.Y) / (p2.Position.Y - y1);
+
+            foreach (Point2D p in BezierControlPoints)
+            {
+                p.Position.X = scaleX*(p.Position.X - x1) + x1;
+                p.Position.Y = scaleY*(p.Position.Y - y1) + y1;
+            }
 
             panel1.Invalidate();
         }
