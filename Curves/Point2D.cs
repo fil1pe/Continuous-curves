@@ -11,6 +11,7 @@ namespace Curves
     public class Point2D
     {
         public PointF Position;
+        public bool Active = true;
         private Brush DrawBrush;
         private bool Dragging = false;
 
@@ -23,7 +24,7 @@ namespace Curves
             {
                 if (e.Location.X >= Position.X - 6 && e.Location.X <= Position.X + 6 &&
                     e.Location.Y >= Position.Y - 6 && e.Location.Y <= Position.Y + 6 &&
-                    control.Dragging == false)
+                    !control.Dragging && Active)
                 {
                     Dragging = control.Dragging = true;
                 }

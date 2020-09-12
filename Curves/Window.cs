@@ -77,7 +77,21 @@ namespace Curves
             button1.Click += (s, e) => { C0(); panel1.Invalidate(); };
             button2.Click += (s, e) => { G1(); panel1.Invalidate(); };
             button3.Click += (s, e) => { C1(); panel1.Invalidate(); };
+            button4.Click += (s, e) => { G2(); panel1.Invalidate(); };
+            button5.Click += (s, e) => { C2(); panel1.Invalidate(); };
+
+            chBox.Click += (s, e) =>
+            {
+                ShowControlPoints = !ShowControlPoints;
+                foreach (Point2D p in BSplineControlPoints)
+                    p.Active = !p.Active;
+                foreach (Point2D p in BezierControlPoints)
+                    p.Active = !p.Active;
+                panel1.Invalidate();
+            };
         }
+
+        private bool ShowControlPoints = true;
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
@@ -86,6 +100,8 @@ namespace Curves
             // Curves:
             BezierCurve.Draw(e.Graphics);
             BSplineCurve.Draw(e.Graphics);
+
+            if (!ShowControlPoints) return;
 
             // Polygons:
             Pen polygonPen = new Pen(Color.FromArgb(150, 150, 150, 150));
