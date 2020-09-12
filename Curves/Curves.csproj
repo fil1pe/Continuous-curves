@@ -47,9 +47,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bezier.cs" />
+    <Compile Include="BSpline.cs" />
+    <Compile Include="Curve.cs" />
     <Compile Include="Point2D.cs" />
     <Compile Include="Window.cs">
-      <SubType>Form</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Window.Designer.cs">
       <DependentUpon>Window.cs</DependentUpon>

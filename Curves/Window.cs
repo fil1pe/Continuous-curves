@@ -12,6 +12,7 @@ using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Math;
 
 namespace Curves
 {
@@ -32,37 +33,49 @@ namespace Curves
             return float.Parse(str, CultureInfo.InvariantCulture);
         }
 
-        private List<Point2D> ControlPoints = new List<Point2D>();
-        private Bezier BezierCurve;
+        private List<Point2D> BSplineControlPoints = new List<Point2D>(),
+            BezierControlPoints = new List<Point2D>();
         private BSpline BSplineCurve;
+        private Bezier BezierCurve;
 
         public Window()
         {
             InitializeComponent();
-            Color color = Color.Coral;
-            List<string> pointsStr = File.ReadAllLines(@"points").ToList();
-            for (int i=0; i<10; i++)
+
+            string[] fileLines = File.ReadAllLines(@"points");
+
+            for (int i = 5; i < fileLines.Length; i++)
             {
-                if (i == 5)
-                    color = Color.BlueViolet;
-                string[] coordinates = pointsStr[i].Split(',');
-                ControlPoints.Add(
-                    new Point2D(ParseFloat(coordinates[0]), ParseFloat(coordinates[1]), color, panel1)
+                string[] coordinates = fileLines[i].Split(',');
+                BSplineControlPoints.Add(
+                    new Point2D(ParseFloat(coordinates[0]), ParseFloat(coordinates[1]), Color.Coral, panel1)
                 );
             }
-            BSplineCurve = new BSpline(ControlPoints[0],
-                ControlPoints[1],
-                ControlPoints[2],
-                ControlPoints[3],
-                ControlPoints[4],
+            BSplineCurve = new BSpline(BSplineControlPoints[0],
+                BSplineControlPoints[1],
+                BSplineControlPoints[2],
+                BSplineControlPoints[3],
+                BSplineControlPoints[4],
+                BSplineControlPoints[5],
                 Color.OrangeRed);
-            BezierCurve = new Bezier(ControlPoints[5],
-                ControlPoints[6],
-                ControlPoints[7],
-                ControlPoints[8],
-                ControlPoints[9],
+
+            for (int i = 0; i < 5; i++)
+            {
+                string[] coordinates = fileLines[i].Split(',');
+                BezierControlPoints.Add(
+                    new Point2D(ParseFloat(coordinates[0]), ParseFloat(coordinates[1]), Color.BlueViolet, panel1)
+                );
+            }
+            BezierCurve = new Bezier(BezierControlPoints[0],
+                BezierControlPoints[1],
+                BezierControlPoints[2],
+                BezierControlPoints[3],
+                BezierControlPoints[4],
                 Color.Blue);
+
             panel1.Paint += new PaintEventHandler(panel1_Paint);
+            button1.Click += C0;
+            button2.Click += G1;
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
@@ -77,30 +90,90 @@ namespace Curves
             Pen polygonPen = new Pen(Color.FromArgb(150, 150, 150, 150));
             polygonPen.DashStyle = DashStyle.Dash;
 
-            for (int i=0; i<4; i++)
+            for (int i = 0; i < BezierControlPoints.Count - 1; i++)
             {
-                Point2D p1 = ControlPoints[i], p2 = ControlPoints[i+1];
+                Point2D p1 = BezierControlPoints[i], p2 = BezierControlPoints[i + 1];
                 e.Graphics.DrawLine(polygonPen, p1.Position, p2.Position);
             }
-            for (int i=5; i<9; i++)
+            for (int i = 0; i < BSplineControlPoints.Count - 1; i++)
             {
-                Point2D p1 = ControlPoints[i], p2 = ControlPoints[i + 1];
+                Point2D p1 = BSplineControlPoints[i], p2 = BSplineControlPoints[i + 1];
                 e.Graphics.DrawLine(polygonPen, p1.Position, p2.Position);
             }
 
             // Points:
-            for (int i=9; i>=0; i--)
-                ControlPoints[i].Draw(e.Graphics);
+            foreach (Point2D p in BezierControlPoints)
+                p.Draw(e.Graphics);
+            foreach (Point2D p in BSplineControlPoints)
+                p.Draw(e.Graphics);
+        }
+
+        private void C0(object sender, EventArgs e)
+        {
+            float deltaX = BSplineControlPoints.Last().Position.X - BezierControlPoints.First().Position.X;
+            float deltaY = BSplineControlPoints.Last().Position.Y - BezierControlPoints.First().Position.Y;
+
+            foreach (Point2D p in BezierControlPoints)
+            {
+                p.Position.X += deltaX;
+                p.Position.Y += deltaY;
+            }
+
+            panel1.Invalidate();
+        }
+
+        private void G1(object sender, EventArgs e)
+        {
+            C0(sender, e);
+
+            Point2D p0 = BSplineControlPoints[BSplineControlPoints.Count - 2];
+            Point2D p1 = BezierControlPoints.First();
+            Point2D p2 = BezierControlPoints[1];
+
+            float angle = 0;
+
+            if (p1.Position.X - p0.Position.X <= 0 && p1.Position.Y - p0.Position.Y <= 0)
+                angle = (float)PI;
+            else if (p1.Position.X - p0.Position.X >= 0 && p1.Position.Y - p0.Position.Y <= 0)
+                angle = (float)(PI/2);
+            else if (p1.Position.X - p0.Position.X <= 0 && p1.Position.Y - p0.Position.Y >= 0)
+                angle = (float)(-PI/2);
+
+            BSplineCurve.Rotate(angle, p1.Position);
+
+            if (p2.Position.X - p1.Position.X <= 0 && p2.Position.Y - p1.Position.Y <= 0)
+                BezierCurve.Rotate((float)PI, p1.Position);
+            else if (p2.Position.X - p1.Position.X >= 0 && p2.Position.Y - p1.Position.Y <= 0)
+                BezierCurve.Rotate((float)(PI/2), p1.Position);
+            else if (p2.Position.X - p1.Position.X <= 0 && p2.Position.Y - p1.Position.Y >= 0)
+                BezierCurve.Rotate((float)(-PI/2), p1.Position);
+
+            BezierCurve.Rotate(
+                (float)(Atan(Abs(p2.Position.X - p1.Position.X) / Abs(p2.Position.Y - p1.Position.Y)) -
+                Atan(Abs(p1.Position.X - p0.Position.X) / Abs(p1.Position.Y - p0.Position.Y))),
+                p1.Position);
+
+            BezierCurve.Rotate(-angle, p1.Position);
+            BSplineCurve.Rotate(-angle, p1.Position);
+
+            panel1.Invalidate();
         }
 
         private void Window_FormClosing(object sender, FormClosingEventArgs e)
         {
-            List<string> points = new List<string>();
-            foreach (Point2D p in ControlPoints)
+            if (MessageBox.Show("Do you want to save?", "Save before closing?", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                points.Add(p.Position.X + "," + p.Position.Y);
+                List<string> points = new List<string>();
+                foreach (Point2D p in BezierControlPoints)
+                {
+                    points.Add(p.Position.X + "," + p.Position.Y);
+                }
+                foreach (Point2D p in BSplineControlPoints)
+                {
+                    points.Add(p.Position.X + "," + p.Position.Y);
+                }
+                File.WriteAllLines(@"points", points);
             }
-            File.WriteAllLines(@"points", points);
         }
     }
 }

@@ -9,29 +9,53 @@ namespace Curves
 {
     public class BSpline : Curve
     {
-        public BSpline(Point2D P0, Point2D P1, Point2D P2, Point2D P3, Point2D P4, Color color)
-            : base(P0, P1, P2, P3, P4, color) { }
+        private List<float> Knots = new List<float>();
+
+        public BSpline(Point2D P0, Point2D P1, Point2D P2, Point2D P3, Point2D P4, Point2D P5, Color color)
+            : base(color)
+        {
+            ControlPoints.Add(P0);
+            ControlPoints.Add(P1);
+            ControlPoints.Add(P2);
+            ControlPoints.Add(P3);
+            ControlPoints.Add(P4);
+            ControlPoints.Add(P5);
+
+            Knots.Add(0);
+            Knots.Add(0);
+            Knots.Add(0);
+            Knots.Add(0);
+            Knots.Add(0.33f);
+            Knots.Add(0.66f);
+            Knots.Add(1);
+            Knots.Add(1);
+            Knots.Add(1);
+            Knots.Add(1);
+        }
 
         private float BasisFunction(int i, int j, float t)
         {
             if (j == 0)
-                if (t >= i / 8f && t < (i + 1) / 8f)
-                    return 1;
-                else
-                    return 0;
-            return (
-                (8 * t - i) * BasisFunction(i, j - 1, t) +
-                (i + j + 1 - 8 * t) * BasisFunction(i + 1, j - 1, t)
-            ) / j;
+                return Knots[i] <= t && t < Knots[i + 1] ? 1 : 0;
+
+            float b0 = (t - Knots[i]) * BasisFunction(i, j - 1, t);
+            if (b0 != 0) b0 /= Knots[i + j] - Knots[i];
+
+            float b1 = (Knots[i + j + 1] - t) * BasisFunction(i + 1, j - 1, t);
+            if (b1 != 0) b1 /= Knots[i + j + 1] - Knots[i + 1];
+
+            return b0 + b1;
         }
 
-        protected override float Evalf(float x0, float x1, float x2, float x3, float x4, float t)
+        protected override float Evalf(List<float> x, float t)
         {
-            return x0 * BasisFunction(0, 3, t) +
-                x1 * BasisFunction(1, 3, t) +
-                x2 * BasisFunction(2, 3, t) +
-                x3 * BasisFunction(3, 3, t) +
-                x4 * BasisFunction(4, 3, t);
+            return
+                x[0] * BasisFunction(0, 3, t) +
+                x[1] * BasisFunction(1, 3, t) +
+                x[2] * BasisFunction(2, 3, t) +
+                x[3] * BasisFunction(3, 3, t) +
+                x[4] * BasisFunction(4, 3, t) +
+                x[5] * BasisFunction(5, 3, t);
         }
     }
 }

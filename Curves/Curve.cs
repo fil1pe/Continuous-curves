@@ -4,32 +4,32 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Math;
 
 namespace Curves
 {
     public abstract class Curve
     {
-        public Point2D P0, P1, P2, P3, P4;
+        public List<Point2D> ControlPoints = new List<Point2D>();
         private Pen DrawPen;
 
-        public Curve(Point2D P0, Point2D P1, Point2D P2, Point2D P3, Point2D P4, Color color)
+        public Curve(Color color)
         {
-            this.P0 = P0;
-            this.P1 = P1;
-            this.P2 = P2;
-            this.P3 = P3;
-            this.P4 = P4;
             DrawPen = new Pen(color);
         }
 
-        protected abstract float Evalf(float x0, float x1, float x2, float x3, float x4, float t);
+        protected abstract float Evalf(List<float> x, float t);
 
         public PointF Eval(float t)
         {
-            return new PointF(
-                Evalf(P0.Position.X, P1.Position.X, P2.Position.X, P3.Position.X, P4.Position.X, t),
-                Evalf(P0.Position.Y, P1.Position.Y, P2.Position.Y, P3.Position.Y, P4.Position.Y, t)
-            );
+            List<float> x = new List<float>(), y = new List<float>();
+            foreach (Point2D p in ControlPoints)
+            {
+                x.Add(p.Position.X);
+                y.Add(p.Position.Y);
+            }
+
+            return new PointF(Evalf(x, t), Evalf(y, t));
         }
 
         public void Draw(Graphics g)
@@ -43,6 +43,19 @@ namespace Curves
                 g.DrawLine(DrawPen, p0, p1);
                 p0 = p1;
                 t += precision;
+            }
+        }
+
+        public void Rotate(float angle, PointF point)
+        {
+            angle *= -1;
+            foreach (Point2D p in ControlPoints)
+            {
+                float x = p.Position.X, y = p.Position.Y;
+                x -= point.X;
+                y -= point.Y;
+                p.Position.X = (float)(Cos(angle) * x + Sin(angle) * y + point.X);
+                p.Position.Y = (float)(-Sin(angle) * x + Cos(angle) * y + point.Y);
             }
         }
     }

@@ -7,4 +7,4 @@ C:\Users\Lipe\Documents\Curves\Curves\obj\Debug\Curves.csproj.GenerateResource.c
 C:\Users\Lipe\Documents\Curves\Curves\obj\Debug\Curves.csproj.CoreCompileInputs.cache
 C:\Users\Lipe\Documents\Curves\Curves\obj\Debug\Curves.exe
 C:\Users\Lipe\Documents\Curves\Curves\obj\Debug\Curves.pdb
-C:\Users\Lipe\Documents\Curves\Curves\obj\Debug\Curves.Window.resources
+C:\Users\Lipe\Documents\Curves\Curves\obj\Debug\Curves.DrawPanel.resources

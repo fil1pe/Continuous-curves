@@ -10,14 +10,13 @@ namespace Curves
 {
     public class Point2D
     {
-        private PointF _position;
-        public PointF Position { get { return _position; } }
+        public PointF Position;
         private Brush DrawBrush;
         private bool Dragging = false;
 
         public Point2D(float x, float y, Color color, DrawPanel control)
         {
-            _position = new PointF(x, y);
+            Position = new PointF(x, y);
             DrawBrush = new SolidBrush(color);
 
             control.MouseDown += delegate (object sender, MouseEventArgs e)
@@ -34,7 +33,7 @@ namespace Curves
             {
                 if (Dragging)
                 {
-                    _position = e.Location;
+                    Position = e.Location;
                     control.Invalidate();
                 }
             };
