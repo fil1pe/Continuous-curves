@@ -77,5 +77,17 @@ namespace Curves
                 p.Position.Y = scaleY * (p.Position.Y - y1) + y1;
             }
         }
+
+        private void G2()
+        {
+            G1();
+            // ...
+        }
+
+        private void C2()
+        {
+            C1();
+            // ...
+        }
     }
 }
