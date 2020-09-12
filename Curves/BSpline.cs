@@ -9,7 +9,7 @@ namespace Curves
 {
     public class BSpline : Curve
     {
-        private List<float> Knots = new List<float>();
+        private float[] Knots;
 
         public BSpline(Point2D P0, Point2D P1, Point2D P2, Point2D P3, Point2D P4, Point2D P5, Color color)
             : base(color)
@@ -21,16 +21,7 @@ namespace Curves
             ControlPoints.Add(P4);
             ControlPoints.Add(P5);
 
-            Knots.Add(0);
-            Knots.Add(0);
-            Knots.Add(0);
-            Knots.Add(0);
-            Knots.Add(0.33f);
-            Knots.Add(0.66f);
-            Knots.Add(1);
-            Knots.Add(1);
-            Knots.Add(1);
-            Knots.Add(1);
+            Knots = new float[] { 0, 0, 0, 0, 1/3f, 2/6f, 1, 1, 1, 1 };
         }
 
         private float BasisFunction(int i, int j, float t)
