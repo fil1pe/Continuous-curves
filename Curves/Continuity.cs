@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -65,17 +66,13 @@ namespace Curves
             Point2D p1 = BezierControlPoints.First();
             Point2D p2 = BezierControlPoints[1];
 
-            float x1 = p1.Position.X,
-                y1 = p1.Position.Y;
-
-            float scaleX = (x1 - p0.Position.X) / (p2.Position.X - x1),
-                scaleY = (y1 - p0.Position.Y) / (p2.Position.Y - y1);
-
-            foreach (Point2D p in BezierControlPoints)
-            {
-                p.Position.X = scaleX * (p.Position.X - x1) + x1;
-                p.Position.Y = scaleY * (p.Position.Y - y1) + y1;
-            }
+            BezierCurve.Scale(
+                new PointF(
+                    (p1.Position.X - p0.Position.X) / (p2.Position.X - p1.Position.X),
+                    (p1.Position.Y - p0.Position.Y) / (p2.Position.Y - p1.Position.Y)
+                ),
+                p1.Position
+            );
         }
 
         private void G2()

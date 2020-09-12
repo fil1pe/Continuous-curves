@@ -58,5 +58,14 @@ namespace Curves
                 p.Position.Y = (float)(-Sin(angle) * x + Cos(angle) * y + point.Y);
             }
         }
+
+        public void Scale(PointF value, PointF point)
+        {
+            foreach (Point2D p in ControlPoints)
+            {
+                p.Position.X = value.X * (p.Position.X - point.X) + point.X;
+                p.Position.Y = value.Y * (p.Position.Y - point.Y) + point.Y;
+            }
+        }
     }
 }
