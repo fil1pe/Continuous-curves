@@ -24,7 +24,7 @@ namespace Curves
             ControlPoints.Add(P4);
             ControlPoints.Add(P5);
 
-            Knots = new float[] { 0, 0, 0, 0, 1/3f, 2/6f, 1, 1, 1, 1 };
+            Knots = new float[] { 0, 0, 0, 0, 1/3f, 2/3f, 1, 1, 1, 1 };
         }
 
         private float BasisFunction(int i, int j, float t)
