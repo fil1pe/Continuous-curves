@@ -26,8 +26,8 @@ namespace Curves
             List<float> x = new List<float>(), y = new List<float>();
             foreach (Point2D p in ControlPoints)
             {
-                x.Add(p.Position.X);
-                y.Add(p.Position.Y);
+                x.Add(p.Location.X);
+                y.Add(p.Location.Y);
             }
 
             return new PointF(Evalf(x, t), Evalf(y, t));
@@ -52,11 +52,11 @@ namespace Curves
             angle *= -1;
             foreach (Point2D p in ControlPoints)
             {
-                float x = p.Position.X, y = p.Position.Y;
+                float x = p.Location.X, y = p.Location.Y;
                 x -= point.X;
                 y -= point.Y;
-                p.Position.X = (float)(Cos(angle) * x + Sin(angle) * y + point.X);
-                p.Position.Y = (float)(-Sin(angle) * x + Cos(angle) * y + point.Y);
+                p.Location.X = (float)(Cos(angle) * x + Sin(angle) * y + point.X);
+                p.Location.Y = (float)(-Sin(angle) * x + Cos(angle) * y + point.Y);
             }
         }
 
@@ -64,8 +64,8 @@ namespace Curves
         {
             foreach (Point2D p in ControlPoints)
             {
-                p.Position.X = value.X * (p.Position.X - point.X) + point.X;
-                p.Position.Y = value.Y * (p.Position.Y - point.Y) + point.Y;
+                p.Location.X = value.X * (p.Location.X - point.X) + point.X;
+                p.Location.Y = value.Y * (p.Location.Y - point.Y) + point.Y;
             }
         }
     }
