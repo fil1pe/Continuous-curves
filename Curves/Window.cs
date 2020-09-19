@@ -79,7 +79,6 @@ namespace Curves
             button1.Click += (s, e) => { C0(); panel1.Invalidate(); };
             button2.Click += (s, e) => { G1(); panel1.Invalidate(); };
             button3.Click += (s, e) => { C1(); panel1.Invalidate(); };
-            button4.Click += (s, e) => { G2(); panel1.Invalidate(); };
             button5.Click += (s, e) => { C2(); panel1.Invalidate(); };
 
             chBox.Click += (s, e) =>

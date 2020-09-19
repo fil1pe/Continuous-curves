@@ -83,12 +83,6 @@ namespace Curves
             BezierCurve.Scale(new PointF(scale, scale), p1.Location);
         }
 
-        private void G2()
-        {
-            G1();
-            // ...
-        }
-
         private void C2()
         {
             C1();
@@ -124,8 +118,8 @@ namespace Curves
             Point2D p1 = BezierControlPoints[2];
 
             p1.Location = new PointF(
-                (alpha*v0.X - beta*v1.X + gamma*u0.X) / gamma + p0.X,
-                (alpha*v0.Y - beta*v1.Y + gamma*u0.Y) / gamma + p0.Y
+                (alpha * v0.X - beta * v1.X + gamma * u0.X) / gamma + p0.X,
+                (alpha * v0.Y - beta * v1.Y + gamma * u0.Y) / gamma + p0.Y
             );
         }
     }
