@@ -48,6 +48,9 @@
   <ItemGroup>
     <Compile Include="Bezier.cs" />
     <Compile Include="BSpline.cs" />
+    <Compile Include="Continuity.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Curve.cs" />
     <Compile Include="Point2D.cs" />
     <Compile Include="Window.cs">

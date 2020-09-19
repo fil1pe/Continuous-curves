@@ -9,11 +9,14 @@ namespace Curves
 {
     public class BSpline : Curve
     {
-        private float[] Knots;
+        public int Degree { get; }
+        public float[] Knots { get; }
 
         public BSpline(Point2D P0, Point2D P1, Point2D P2, Point2D P3, Point2D P4, Point2D P5, Color color)
             : base(color)
         {
+            Degree = 3;
+
             ControlPoints.Add(P0);
             ControlPoints.Add(P1);
             ControlPoints.Add(P2);

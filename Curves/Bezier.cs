@@ -10,9 +10,13 @@ namespace Curves
 {
     public class Bezier : Curve
     {
+        public int Degree { get; }
+
         public Bezier(Point2D P0, Point2D P1, Point2D P2, Point2D P3, Point2D P4, Color color)
             : base(color)
         {
+            Degree = 4;
+
             ControlPoints.Add(P0);
             ControlPoints.Add(P1);
             ControlPoints.Add(P2);

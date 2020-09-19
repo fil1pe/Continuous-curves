@@ -10,7 +10,8 @@ namespace Curves
 {
     public abstract class Curve
     {
-        public List<Point2D> ControlPoints = new List<Point2D>();
+        protected List<Point2D> ControlPoints = new List<Point2D>();
+        public int ControlPointsNum { get { return ControlPoints.Count; } }
         private Pen DrawPen;
 
         public Curve(Color color)
