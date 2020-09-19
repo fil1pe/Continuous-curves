@@ -147,7 +147,6 @@ namespace Curves
         private void MouseWheelEvent(object sender, MouseEventArgs e)
         {
             float scale = e.Delta / 120 >= 1 ? 1.5f : 2/3f;
-            Console.WriteLine(scale);
 
             BezierCurve.Scale(new PointF(scale, scale), e.Location);
             BSplineCurve.Scale(new PointF(scale, scale), e.Location);
