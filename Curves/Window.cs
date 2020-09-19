@@ -37,6 +37,8 @@ namespace Curves
             BezierControlPoints = new List<Point2D>();
         private BSpline BSplineCurve;
         private Bezier BezierCurve;
+        private bool DraggingPanel = false;
+        private PointF MousePosition;
 
         public Window()
         {
@@ -91,6 +93,30 @@ namespace Curves
             };
 
             panel1.MouseWheel += MouseWheelEvent;
+            panel1.MouseDown += (s, e) =>
+            {
+                if (panel1.Dragging) return;
+                DraggingPanel = true;
+                MousePosition = e.Location;
+            };
+            panel1.MouseMove += (s, e) =>
+            {
+                if (!DraggingPanel) return;
+                PointF newMousePos = e.Location;
+                foreach (Point2D p in BSplineControlPoints)
+                {
+                    p.Location.X += newMousePos.X - MousePosition.X;
+                    p.Location.Y += newMousePos.Y - MousePosition.Y;
+                }
+                foreach (Point2D p in BezierControlPoints)
+                {
+                    p.Location.X += newMousePos.X - MousePosition.X;
+                    p.Location.Y += newMousePos.Y - MousePosition.Y;
+                }
+                MousePosition = newMousePos;
+                panel1.Invalidate();
+            };
+            panel1.MouseUp += (s, e) => { DraggingPanel = false; };
         }
 
         private bool ShowControlPoints = true;
@@ -112,12 +138,12 @@ namespace Curves
             for (int i = 0; i < BezierControlPoints.Count - 1; i++)
             {
                 Point2D p1 = BezierControlPoints[i], p2 = BezierControlPoints[i + 1];
-                e.Graphics.DrawLine(polygonPen, p1.Position, p2.Position);
+                e.Graphics.DrawLine(polygonPen, p1.Location, p2.Location);
             }
             for (int i = 0; i < BSplineControlPoints.Count - 1; i++)
             {
                 Point2D p1 = BSplineControlPoints[i], p2 = BSplineControlPoints[i + 1];
-                e.Graphics.DrawLine(polygonPen, p1.Position, p2.Position);
+                e.Graphics.DrawLine(polygonPen, p1.Location, p2.Location);
             }
 
             // Points:
@@ -133,13 +159,9 @@ namespace Curves
             {
                 List<string> points = new List<string>();
                 foreach (Point2D p in BezierControlPoints)
-                {
-                    points.Add(p.Position.X + "," + p.Position.Y);
-                }
+                    points.Add(p.Location.X + "," + p.Location.Y);
                 foreach (Point2D p in BSplineControlPoints)
-                {
-                    points.Add(p.Position.X + "," + p.Position.Y);
-                }
+                    points.Add(p.Location.X + "," + p.Location.Y);
                 File.WriteAllLines(@"points", points);
             }
         }
