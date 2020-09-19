@@ -30,7 +30,7 @@ namespace Curves
     {
         private static float ParseFloat(string str)
         {
-            return float.Parse(str, CultureInfo.InvariantCulture);
+            return float.Parse(str, CultureInfo.CurrentCulture);
         }
 
         private List<Point2D> BSplineControlPoints = new List<Point2D>(),
@@ -38,7 +38,7 @@ namespace Curves
         private BSpline BSplineCurve;
         private Bezier BezierCurve;
         private bool DraggingPanel = false;
-        private PointF MousePosition;
+        private PointF MouseLocation;
 
         public Window()
         {
@@ -48,7 +48,7 @@ namespace Curves
 
             for (int i = 5; i < fileLines.Length; i++)
             {
-                string[] coordinates = fileLines[i].Split(',');
+                string[] coordinates = fileLines[i].Split(';');
                 BSplineControlPoints.Add(
                     new Point2D(ParseFloat(coordinates[0]), ParseFloat(coordinates[1]), Color.Coral, panel1)
                 );
@@ -63,7 +63,7 @@ namespace Curves
 
             for (int i = 0; i < 5; i++)
             {
-                string[] coordinates = fileLines[i].Split(',');
+                string[] coordinates = fileLines[i].Split(';');
                 BezierControlPoints.Add(
                     new Point2D(ParseFloat(coordinates[0]), ParseFloat(coordinates[1]), Color.BlueViolet, panel1)
                 );
@@ -97,7 +97,7 @@ namespace Curves
             {
                 if (panel1.Dragging) return;
                 DraggingPanel = true;
-                MousePosition = e.Location;
+                MouseLocation = e.Location;
             };
             panel1.MouseMove += (s, e) =>
             {
@@ -105,15 +105,15 @@ namespace Curves
                 PointF newMousePos = e.Location;
                 foreach (Point2D p in BSplineControlPoints)
                 {
-                    p.Location.X += newMousePos.X - MousePosition.X;
-                    p.Location.Y += newMousePos.Y - MousePosition.Y;
+                    p.Location.X += newMousePos.X - MouseLocation.X;
+                    p.Location.Y += newMousePos.Y - MouseLocation.Y;
                 }
                 foreach (Point2D p in BezierControlPoints)
                 {
-                    p.Location.X += newMousePos.X - MousePosition.X;
-                    p.Location.Y += newMousePos.Y - MousePosition.Y;
+                    p.Location.X += newMousePos.X - MouseLocation.X;
+                    p.Location.Y += newMousePos.Y - MouseLocation.Y;
                 }
-                MousePosition = newMousePos;
+                MouseLocation = newMousePos;
                 panel1.Invalidate();
             };
             panel1.MouseUp += (s, e) => { DraggingPanel = false; };
@@ -159,9 +159,9 @@ namespace Curves
             {
                 List<string> points = new List<string>();
                 foreach (Point2D p in BezierControlPoints)
-                    points.Add(p.Location.X + "," + p.Location.Y);
+                    points.Add(p.Location.X.ToString() + ";" + p.Location.Y.ToString());
                 foreach (Point2D p in BSplineControlPoints)
-                    points.Add(p.Location.X + "," + p.Location.Y);
+                    points.Add(p.Location.X.ToString() + ";" + p.Location.Y.ToString());
                 File.WriteAllLines(@"points", points);
             }
         }
