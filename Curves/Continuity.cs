@@ -83,6 +83,40 @@ namespace Curves
             BezierCurve.Scale(new PointF(scale, scale), p1.Location);
         }
 
+        private void G2()
+        {
+            G1();
+
+            float alpha = 1 / (BSplineCurve.Knots[BSplineCurve.ControlPointsNum - 1 + BSplineCurve.Degree] -
+                        BSplineCurve.Knots[BSplineCurve.ControlPointsNum - 1]);
+            float beta = 1 / (BSplineCurve.Knots[BSplineCurve.ControlPointsNum - 1 + BSplineCurve.Degree - 1] -
+                        BSplineCurve.Knots[BSplineCurve.ControlPointsNum - 1 - 1]);
+
+            PointF v0 = new PointF(
+                BSplineControlPoints[BSplineCurve.ControlPointsNum - 2].Location.X - BSplineControlPoints[BSplineCurve.ControlPointsNum - 3].Location.X,
+                BSplineControlPoints[BSplineCurve.ControlPointsNum - 2].Location.Y - BSplineControlPoints[BSplineCurve.ControlPointsNum - 3].Location.Y
+            );
+            PointF v1 = new PointF(
+               BSplineControlPoints[BSplineCurve.ControlPointsNum - 1].Location.X - BSplineControlPoints[BSplineCurve.ControlPointsNum - 2].Location.X,
+               BSplineControlPoints[BSplineCurve.ControlPointsNum - 1].Location.Y - BSplineControlPoints[BSplineCurve.ControlPointsNum - 2].Location.Y
+            );
+            PointF u0 = new PointF(
+                BezierControlPoints[1].Location.X - BezierControlPoints[0].Location.X,
+                BezierControlPoints[1].Location.Y - BezierControlPoints[0].Location.Y
+            );
+            PointF u1 = new PointF(
+                BezierControlPoints[2].Location.X - BezierControlPoints[1].Location.X,
+                BezierControlPoints[2].Location.Y - BezierControlPoints[1].Location.Y
+            );
+
+            if (Abs((alpha*v1.X - beta*v0.X)/(u1.X - u0.X) - (alpha*v1.Y - beta*v0.Y)/(u1.Y - u0.Y)) < 0.0001)
+                return;
+
+            BezierControlPoints[2].Location = new PointF(
+                alpha * v1.X - beta * v0.X + u0.X + BezierControlPoints[1].Location.X,
+                alpha * v1.Y - beta * v0.Y + u0.Y + BezierControlPoints[1].Location.Y
+            );
+        }
         private void C2()
         {
             C1();
@@ -102,24 +136,21 @@ namespace Curves
             float gamma = (BezierCurve.Degree - 1) * BezierCurve.Degree;
 
             PointF v0 = new PointF(
-                BSplineControlPoints[BSplineCurve.ControlPointsNum - 1].Location.X - BSplineControlPoints[BSplineCurve.ControlPointsNum - 2].Location.X,
-                BSplineControlPoints[BSplineCurve.ControlPointsNum - 1].Location.Y - BSplineControlPoints[BSplineCurve.ControlPointsNum - 2].Location.Y
-            );
-            PointF v1 = new PointF(
                 BSplineControlPoints[BSplineCurve.ControlPointsNum - 2].Location.X - BSplineControlPoints[BSplineCurve.ControlPointsNum - 3].Location.X,
                 BSplineControlPoints[BSplineCurve.ControlPointsNum - 2].Location.Y - BSplineControlPoints[BSplineCurve.ControlPointsNum - 3].Location.Y
             );
+            PointF v1 = new PointF(
+                BSplineControlPoints[BSplineCurve.ControlPointsNum - 1].Location.X - BSplineControlPoints[BSplineCurve.ControlPointsNum - 2].Location.X,
+                BSplineControlPoints[BSplineCurve.ControlPointsNum - 1].Location.Y - BSplineControlPoints[BSplineCurve.ControlPointsNum - 2].Location.Y
+            );
             PointF u0 = new PointF(
-                BezierControlPoints[0].Location.X - BezierControlPoints[1].Location.X,
-                BezierControlPoints[0].Location.Y - BezierControlPoints[1].Location.Y
+                BezierControlPoints[1].Location.X - BezierControlPoints[0].Location.X,
+                BezierControlPoints[1].Location.Y - BezierControlPoints[0].Location.Y
             );
 
-            PointF p0 = BezierControlPoints[1].Location;
-            Point2D p1 = BezierControlPoints[2];
-
-            p1.Location = new PointF(
-                (alpha * v0.X - beta * v1.X + gamma * u0.X) / gamma + p0.X,
-                (alpha * v0.Y - beta * v1.Y + gamma * u0.Y) / gamma + p0.Y
+            BezierControlPoints[2].Location = new PointF(
+                (alpha * v1.X - beta * v0.X + gamma * u0.X) / gamma + BezierControlPoints[1].Location.X,
+                (alpha * v1.Y - beta * v0.Y + gamma * u0.Y) / gamma + BezierControlPoints[1].Location.Y
             );
         }
     }
