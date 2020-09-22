@@ -1,0 +1,9 @@
+C:\Users\Lipe\Documents\Curves\Curves\bin\Release\Curves.exe.config
+C:\Users\Lipe\Documents\Curves\Curves\bin\Release\Curves.exe
+C:\Users\Lipe\Documents\Curves\Curves\bin\Release\Curves.pdb
+C:\Users\Lipe\Documents\Curves\Curves\obj\Release\Curves.DrawPanel.resources
+C:\Users\Lipe\Documents\Curves\Curves\obj\Release\Curves.Properties.Resources.resources
+C:\Users\Lipe\Documents\Curves\Curves\obj\Release\Curves.csproj.GenerateResource.cache
+C:\Users\Lipe\Documents\Curves\Curves\obj\Release\Curves.csproj.CoreCompileInputs.cache
+C:\Users\Lipe\Documents\Curves\Curves\obj\Release\Curves.exe
+C:\Users\Lipe\Documents\Curves\Curves\obj\Release\Curves.pdb
